@@ -1,6 +1,15 @@
 ﻿var speed = 3.0;
 var rotateSpeed = 3.0;
 var bulletPrefab:Transform;
+var bulletSpeed = 2000;
+var spawnPoint:Transform;
+private var dead = false;
+
+function OnControllerColliderHit(hit : ControllerColliderHit) {
+	if(hit.gameObject.tag == "fallout") {
+		dead = true;
+	}
+}
 
 function Update () {
 	var controller : CharacterController = GetComponent(CharacterController);
@@ -14,7 +23,15 @@ function Update () {
 	controller.SimpleMove(forward * curSpeed);
 	
 	if(Input.GetButtonDown("Fire")) {
-		var bullet = Instantiate(bulletPrefab, GameObject.Find("spawnPoint").transform.position, Quaternion.identity);
-		bullet.rigidbody.AddForce(transform.forward * 2000);
+		var bullet = Instantiate(bulletPrefab, transform.Find("spawnPoint").transform.position, Quaternion.identity);
+		bullet.rigidbody.AddForce(transform.forward * bulletSpeed);
+	}
+}
+
+function LateUpdate() {
+	if(dead) {
+		transform.position = spawnPoint.position;
+		gameObject.Find("Main Camera").transform.position = spawnPoint.position;
+		dead = false;
 	}
 }
