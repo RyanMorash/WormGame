@@ -1,13 +1,33 @@
-﻿var speed = 3.0;
+﻿//move speeds
+var speed = 3.0;
 var rotateSpeed = 3.0;
+
+//shooting
 var bulletPrefab:Transform;
 var bulletSpeed = 2000;
-var spawnPoint:Transform;
-private var dead = false;
 
-function OnControllerColliderHit(hit : ControllerColliderHit) {
+//dying + respawn
+var spawnPoint:Transform;
+static var dead = false;
+
+//getting hit
+var tumbleSpeed = 800;
+var decreaseTime = 100;
+var decayTime = 10;
+static var gotHit = false;
+private var backup = [tumbleSpeed, decreaseTime, decayTime];
+
+//function OnControllerColliderHit(hit : ControllerColliderHit) {
+function OnTriggerEnter(hit : Collider) {
 	if(hit.gameObject.tag == "fallout") {
 		dead = true;
+		healthControl.LIVES -= 1;
+	}
+	
+	if (hit.gameObject.tag == "enemyProjectile") {
+		gotHit = true;
+		healthControl.HITS += 1;
+		Destroy(hit.gameObject);
 	}
 }
 
@@ -33,5 +53,19 @@ function LateUpdate() {
 		transform.position = spawnPoint.position;
 		gameObject.Find("Main Camera").transform.position = spawnPoint.position;
 		dead = false;
+	}
+	
+	if(gotHit) {
+		if(tumbleSpeed < 1) {
+			tumbleSpeed = backup[0];
+			decreaseTime = backup[1];
+			decayTime = backup[2];
+			gotHit = false;
+		}
+		else {
+			transform.Rotate(0, tumbleSpeed * Time.deltaTime, 0, Space.World);
+			tumbleSpeed = tumbleSpeed - decayTime;
+			decreaseTime += decayTime;
+		}
 	}
 }
