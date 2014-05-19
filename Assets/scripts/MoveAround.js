@@ -44,6 +44,7 @@ function Update () {
 	
 	if(Input.GetButtonDown("Fire")) {
 		var bullet = Instantiate(bulletPrefab, transform.Find("spawnPoint").transform.position, Quaternion.identity);
+		bullet.tag = "wormProjectile";
 		bullet.rigidbody.AddForce(transform.forward * bulletSpeed);
 	}
 }

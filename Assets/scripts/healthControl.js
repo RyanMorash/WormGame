@@ -34,6 +34,10 @@ function Update () {
 	}
 	
 	switch(HITS) {
+		case 0:
+			//Do Nothing
+		break;
+	
 		case 1:
 			bodyPart2.renderer.enabled=false;
 		break;
@@ -44,6 +48,14 @@ function Update () {
 		break;
 		
 		case 3:
+			LIVES -= 1;
+			HITS = 0;
+			MoveAround.dead = true;
+			bodyPart1.renderer.enabled=true;
+			bodyPart2.renderer.enabled=true;
+		break;
+		
+		default:
 			LIVES -= 1;
 			HITS = 0;
 			MoveAround.dead = true;
