@@ -9,7 +9,8 @@ static var LIVES = 3;
 static var HITS = 0;
 
 function Start () {
-
+	LIVES = 3;
+	HITS = 0;
 }
 
 function Update () {
@@ -29,7 +30,7 @@ function Update () {
 		break;
 			
 		case 0:
-			//game over script here
+			Application.LoadLevel("menu");
 		break;
 	}
 	
